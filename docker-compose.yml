@@ -1,0 +1,35 @@
+version: '0.1'
+
+services:
+
+# Use postgres/example user/password credentials
+  postgres:
+    image: "postgres:latest"
+    restart: always
+    volumes: 
+      - "db-postgresql:/var/lib/postgres"
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+
+# Use root/example as user/password credentials
+  mysql:
+    image: "mysql:latest"
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    volumes: 
+      - "mysql-db:/var/lib/mysql"
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    ports:
+      - 3306:3306
+
+volumes:
+  mysql-db:
+    external: true
+  db-postgresql:
+    external: true
+
+
+
