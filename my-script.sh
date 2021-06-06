@@ -15,7 +15,6 @@ if [[ "$1" == "create" ]]; then
     docker exec -d ubuntu_postgres_1 bash -c '
     psql -u postgres createuser postgres_user;
     psql -u postgres createdb -O postgres_user test;
-    s
     psql -U postgres -c "
     CREATE TABLE Costs ( id VARCHAR PRIMARY KEY, name VARCHAR ( 20 ) UNIQUE NOT NULL, price DECIMAL);
     CREATE TABLE Products ( id VARCHAR PRIMARY KEY, name VARCHAR ( 20 ) UNIQUE NOT NULL, status VARCHAR ( 20 ), quantity CHAR( 1 ), priceId VARCHAR( 20 ));
