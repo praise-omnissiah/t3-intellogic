@@ -4,7 +4,7 @@ services:
 
 # Use postgres/example user/password credentials
   postgres:
-    image: "postgres:latest"
+    image: "postgres:11"
     container_name: postgres
     env_file:
       - ./.env
@@ -16,16 +16,13 @@ services:
 
 # Use root/example as user/password credentials
   mysql:
-    image: "mysql:latest"
+    image: "mysql:8.0"
     container_name: mysql
     env_file:
       - ./.env
-    command: --default-authentication-plugin=mysql_native_password
     restart: always
     volumes: 
       - "msql-data:/var/lib/mysql"
-    environment:
-      MYSQL_ROOT_PASSWORD: example
     ports:
       - 3306:3306
 
