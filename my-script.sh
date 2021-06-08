@@ -34,3 +34,11 @@ fi
 #if [[ "$1" == "migrate-10" ]]; then
     #mysql -u root -pexample -e "CREATE DATABASE test; USE test; "
 #fi
+
+#clean
+if [[ "$1" == "clean" ]]; then
+    docker-compose down;
+    docker-compose rm postgres mysql;
+    docker container prune -f;
+    docker volume prune -f;
+fi
