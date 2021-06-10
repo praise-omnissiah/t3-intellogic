@@ -1,8 +1,9 @@
 # commands
 - docker-compose up -d
 - ./my-script.sh create
-- ./my-script.sh autoinsert
-- ./my-script.sh migrate-10
+- ./my-script.sh autoinsert (use .sql in postgresql for testing)
+- ./my-script.sh migrate-10 (not working)
+- ./my-script.sh clean (remove volumes&containers)
 - docker-compose down
 
 # TO DO
