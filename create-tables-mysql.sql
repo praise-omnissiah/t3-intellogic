@@ -1,3 +1,0 @@
-USE test;
-CREATE TABLE costs (id VARCHAR(20) PRIMARY KEY, name VARCHAR(20), price DECIMAL);
-CREATE TABLE products (id VARCHAR(20) PRIMARY KEY, name VARCHAR(20), status VARCHAR(20), quantity CHAR(1), priceId VARCHAR(20));
