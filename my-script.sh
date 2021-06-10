@@ -11,8 +11,8 @@ if [[ "$1" == "create" ]]; then
     mysql -u root -pexample -e "   
     USE test;
     CREATE TABLE costs (id VARCHAR(20) PRIMARY KEY, name VARCHAR(20), price DECIMAL);
-    CREATE TABLE products (id VARCHAR(20) PRIMARY KEY, name VARCHAR(20), status VARCHAR(20), quantity CHAR(1), priceId VARCHAR(20));"
-    '
+    CREATE TABLE products (id VARCHAR(20) PRIMARY KEY, name VARCHAR(20), status VARCHAR(20), quantity CHAR(1), priceId VARCHAR(20));
+    "'
 
     docker exec -d postgres bash -c '
     psql -U postgres_user -d test -c "
@@ -22,15 +22,22 @@ if [[ "$1" == "create" ]]; then
 fi
 
 #autoinsert
+# [99] ERROR:  syntax error at or near "FROM" at character 211
 if [[ "$1" == "autoinsert" ]]; then
     docker exec -d postgres bash -c '
-    psql -U postgres_user -d test -c "INSERT INTO costs VALUES(RANDOM(), RANDOM();)"
-    '
+    psql -U postgres_user -d test -c "
+    INSERT INTO costs (id, name, price)
+    SELECT md5(random()::text), md5(random()::text), (random()::int)
+    FROM generate_series(1, 20);
+    INSERT INTO products (id, name, status, quantity, priceId)
+    FROM generate_series(1, 20)
+    SELECT md5(random()::text), md5(random()::text), (random()::text), (random()::text), (random()::text);
+    "'
 fi
 
 #migrate-10
 #if [[ "$1" == "migrate-10" ]]; then
-    #mysql -u root -pexample -e "CREATE DATABASE test; USE test; "
+    #mysql -u root -pexample -e "Costs.price всех товаров в 10 раз. "
 #fi
 
 #clean

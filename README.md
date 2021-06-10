@@ -1,4 +1,4 @@
-#commands
+# commands
 docker-compose up -d
 ./my-script.sh create
 ./my-script.sh autoinsert
