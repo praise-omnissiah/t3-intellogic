@@ -10,14 +10,21 @@ if [[ "$1" == "create" ]]; then
     docker exec mysql bash -c '
     mysql -u root -pexample -e "   
     USE test;
-    CREATE TABLE costs (id VARCHAR(20) PRIMARY KEY, name VARCHAR(20), price DECIMAL);
-    CREATE TABLE products (id VARCHAR(20) PRIMARY KEY, name VARCHAR(20), status VARCHAR(20), quantity CHAR(1), priceId VARCHAR(20));
+    CREATE TABLE costs (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20) UNIQUE NOT NULL, price NUMERIC(19,4), PRIMARY KEY (id));
+    CREATE TABLE products (id INT NOT NULL AUTO_INCREMENT, name VARCHAR(20) UNIQUE NOT NULL, status VARCHAR(20), quantity INTEGER, priceId VARCHAR(20) NOT NULL, PRIMARY KEY (id));
     "'
 
     docker exec -d postgres bash -c '
     psql -U postgres_user -d test -c "
-    CREATE TABLE costs ( id VARCHAR PRIMARY KEY, name VARCHAR ( 20 ) UNIQUE NOT NULL, price DECIMAL);
-    CREATE TABLE products ( id VARCHAR PRIMARY KEY, name VARCHAR ( 20 ) UNIQUE NOT NULL, status VARCHAR ( 20 ), quantity CHAR( 1 ), priceId VARCHAR ( 20 ));
+    CREATE TABLE costs ( id SERIAL PRIMARY KEY, name VARCHAR ( 20 ) UNIQUE NOT NULL, price NUMERIC(19,4));
+    CREATE TABLE products ( 
+        id SERIAL PRIMARY KEY, name VARCHAR ( 20 ) UNIQUE NOT NULL,
+        status VARCHAR ( 20 ),
+        quantity INTEGER,
+        priceId INTEGER,
+        CONSTRAINT fk_price
+            FOREIGN KEY(price) 
+	            REFERENCES costs(priceId));
     "'
 fi
 
@@ -36,9 +43,14 @@ if [[ "$1" == "autoinsert" ]]; then
 fi
 
 #migrate-10
-#if [[ "$1" == "migrate-10" ]]; then
-    #mysql -u root -pexample -e "Costs.price всех товаров в 10 раз. "
-#fi
+#increase Costs.price x 10 and insert to mysql test
+#need to output .sql from postgres container to mysql container
+if [[ "$1" == "migrate-10" ]]; then
+    docker exec -d postgres bash -c '
+    pg_dump -t -a costs products > postres-tables.sql;
+    mysql -u root -pexample test < postres-tables.sql
+    ' 
+fi
 
 #clean
 if [[ "$1" == "clean" ]]; then
